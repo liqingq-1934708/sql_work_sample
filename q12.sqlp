@@ -1,0 +1,24 @@
+-- hw6 q12
+-- # of rows of the output = 7
+
+USE geoindex;
+WITH T AS (SELECT y1.name AS first_country, y2.name AS second_country, 
+                m1 AS mountain, s1 AS sea
+         FROM country y1, mountain m1, split(m1.`-country`, " ") mc1, 
+              sea s1, split(s1.`-country`, " ") sc1,
+              country y2, mountain m2, split(m2.`-country`, " ") mc2,
+              sea s2, split(s2.`-country`, " ") sc2
+         WHERE y1.`-car_code` = mc1 AND y1.`-car_code` = sc1 AND
+               y2.`-car_code` = mc2 AND y2.`-car_code` = sc2 AND
+               m1.auto_id = m2.auto_id AND s1.auto_id = s2.auto_id AND 
+               y1.`-car_code` > y2.`-car_code`)
+SELECT DISTINCT T1.first_country, T1.second_country, mountains, seas
+FROM T AS T1
+LET mountains = (SELECT DISTINCT T2.mountain
+                 FROM T AS T2
+                 WHERE T1.first_country = T2.first_country AND
+                       T1.second_country = T2.second_country),
+    seas = (SELECT DISTINCT T3.sea
+            FROM T AS T3
+            WHERE T1.first_country = T3.first_country AND
+                  T1.second_country =  T3.second_country) ;

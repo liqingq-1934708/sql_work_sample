@@ -1,0 +1,9 @@
+-- hw6 q5
+-- # of rows of output = 272
+
+SELECT m.name AS mountain, m.height, 
+       y.`-car_code` AS country_code, y.name AS country_name
+FROM geo.world x, x.mondial.country y, x.mondial.mountain m,
+     split(m.`-country`, " ") countrycode
+WHERE countrycode = y.`-car_code`
+ORDER BY float(m.height) DESC;

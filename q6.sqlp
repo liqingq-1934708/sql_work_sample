@@ -1,0 +1,11 @@
+-- hw6 q6
+-- # of rows of the output = 238
+
+SELECT y.`-car_code` AS country_code, y.name AS country_name,
+       mountains
+FROM geo.world x, x.mondial.country y
+LET mountains = (SELECT m.name AS mountain, m.height
+                 FROM geo.world x1, x1.mondial.mountain m, 
+                      split(m.`-country`, " ") countrycode
+                 WHERE y.`-car_code` = countrycode)
+ORDER BY ARRAY_COUNT(mountains) DESC;

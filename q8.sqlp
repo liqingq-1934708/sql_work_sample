@@ -1,0 +1,12 @@
+-- hw6 q8
+-- # of rows of the output = 45
+
+SELECT y.`-car_code` AS country_code, y.name AS country_name,
+       y.`-area` AS area
+FROM geo.world x, x.mondial.country y
+LET seas = (SELECT s AS sea
+            FROM geo.world x1, x1.mondial.sea s,
+                 split(s.`-country`, " ") countrycode
+            WHERE countrycode = y.`-car_code`)
+WHERE ARRAY_COUNT(seas) = 0
+ORDER BY float(area) DESC;
